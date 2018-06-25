@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import com.google.maps.GeoApiContext;
 import com.pengrad.telegrambot.TelegramBot;
 
 import ro.vladfernoaga.telegram_chatbot_starter.handler.SimpleUpdateHandler;
@@ -19,10 +20,15 @@ public class BeanConfig {
 	/** The Constant LOGGER. */
 	public static final Logger LOGGER = LogManager.getLogger();
 
-	private static final String API_TOKEN = "<YOUR API TOKEN>";
+	private static final String API_TOKEN = "502357720:AAEFcorQSqI4WXBAMDAARMEUwfiXPb3sVGQ";
+	private static final String GEOAPI_TOKEN = "AIzaSyD2vVD-ZgpKbAvjtk158jIu72UwYm44fp0";
 
 	@Autowired
 	private SimpleUpdateHandler updateHandler;
+	
+
+	@Autowired
+	private Properties properties;
 	
 	@Bean
 	public CommandLineRunner runTelegramBoot() {
@@ -36,5 +42,10 @@ public class BeanConfig {
 	public TelegramBot getTelegramBot() {
 		TelegramBot bot = new TelegramBot(API_TOKEN);
 		return  bot;
+	}
+	@Bean
+	public GeoApiContext getGeoContext() {
+		final GeoApiContext context = new GeoApiContext.Builder().apiKey(GEOAPI_TOKEN).build();
+		return context;
 	}
 }
