@@ -1,6 +1,9 @@
 package ro.vladfernoaga.telegram_chatbot_starter.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +24,7 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 
 import ro.vladfernoaga.telegram_chatbot_starter.dao.IPersonDAO;
+import ro.vladfernoaga.telegram_chatbot_starter.model.Offer;
 import ro.vladfernoaga.telegram_chatbot_starter.utils.MenuUtils;
 
 @Service
@@ -28,6 +32,9 @@ public class LocationService{
 	
 	@Autowired
 	private GeoApiContext context;
+	
+	@Autowired
+	private OfferGenerator offerGenerator;
 	
 	@Autowired
 	private IPersonDAO personDAO;
@@ -60,7 +67,7 @@ public class LocationService{
 		}
 		
 		personDAO.insertLocation(currentLocation, chatId);
-		final SendMessage response = processLocation(chatId, messageId, currentLocation, false);
+		final SendMessage response = processLocation(chatId, messageId,userLocation, currentLocation, false);
 		bot.execute(response);
 		
 	
@@ -77,11 +84,36 @@ public String getCity(double lat, double lng) throws ApiException, InterruptedEx
 		
 	}
 
-
-
-public SendMessage processLocation(Integer chatId, Integer messageId, String locationStr,boolean saveLocation) {
-	SendMessage sendMessage;
+public String getStreet(double lat, double lng) throws ApiException, InterruptedException, IOException {
 	
+	final GeocodingResult[] results = GeocodingApi.newRequest(context).latlng(new LatLng(lat, lng)).language("en")
+			.resultType(AddressType.STREET_ADDRESS, AddressType.ADMINISTRATIVE_AREA_LEVEL_2).await();
+	
+	final String street = results[0].formattedAddress;
+	
+	return street;
+	
+}
+
+
+public String genString(Location userLocation,int n) throws ApiException, InterruptedException, IOException
+{	StringBuffer sb = new StringBuffer();
+	List <Offer>list =new ArrayList<>();
+	for(int i=0;i<n;i++)
+	{
+		list.add(offerGenerator.generateOffer(userLocation));
+	}
+	 for(Offer o : list)
+		{
+			sb.append(o.toString());
+		}
+	 String newValue = sb.toString();
+	 return newValue;
+}
+
+
+public SendMessage processLocation(Integer chatId, Integer messageId,Location userLocation, String locationStr,boolean saveLocation) {
+	SendMessage sendMessage;
 	if (locationStr == null) {
 		sendMessage = new SendMessage(chatId, String.format("location was not received"))
 				.parseMode(ParseMode.HTML).disableNotification(false).replyToMessageId(messageId)
@@ -95,7 +127,7 @@ public SendMessage processLocation(Integer chatId, Integer messageId, String loc
 										.replyToMessageId(messageId).replyMarkup((new ForceReply()));
 			} else {
 				sendMessage = new SendMessage(chatId,
-						String.format("Your location is :"+ locationStr)).parseMode(ParseMode.HTML).disableNotification(false)
+						String.format("Your location is :"+ locationStr+"\r\n Offers : "+genString(userLocation,3))).parseMode(ParseMode.HTML).disableNotification(false)
 										.replyMarkup(new ForceReply());
 			}
 		} catch (final Exception e) {

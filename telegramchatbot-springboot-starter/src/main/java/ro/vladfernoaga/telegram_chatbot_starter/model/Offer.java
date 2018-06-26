@@ -17,16 +17,13 @@ public class Offer {
 	@GeneratedValue(strategy= GenerationType.AUTO)
 	private int id;
 	
-	private double latitude;
-	
-	private double longtitude;
+	private String address;
 	
 	private String offerDetails;
 
-	public Offer( double latitude, double longtitude, String offerDetails) {
+	public Offer( String address, String offerDetails) {
 		
-		this.latitude = latitude;
-		this.longtitude = longtitude;
+		this.address=address;
 		this.offerDetails = offerDetails;
 	}
 
@@ -38,21 +35,7 @@ public class Offer {
 		this.id = id;
 	}
 
-	public double getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-	}
-
-	public double getLongtitude() {
-		return longtitude;
-	}
-
-	public void setLongtitude(double longtitude) {
-		this.longtitude = longtitude;
-	}
+	
 
 	public String getOfferDetails() {
 		return offerDetails;
@@ -60,6 +43,13 @@ public class Offer {
 
 	public void setOfferDetails(String offerDetails) {
 		this.offerDetails = offerDetails;
+	}
+
+	@Override
+	public String toString() {
+		return "\r\n  Location: " + address
+		+ " \r\n Description: " + offerDetails + " \r\n";
+		//return "Offer [id=" + id + ", address=" + address + ", offerDetails=" + offerDetails + "]";
 	}
 	
 	
