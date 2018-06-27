@@ -20,11 +20,17 @@ public class Offer {
 	private String address;
 	
 	private String offerDetails;
+	
+	private double price;
+	
+	private double mp;
 
-	public Offer( String address, String offerDetails) {
+	public Offer( String address, String offerDetails,double price,double mp) {
 		
 		this.address=address;
 		this.offerDetails = offerDetails;
+		this.price=price;
+		this.mp=mp;
 	}
 
 	public int getId() {
@@ -35,7 +41,29 @@ public class Offer {
 		this.id = id;
 	}
 
-	
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public double getMp() {
+		return mp;
+	}
+
+	public void setMp(double mp) {
+		this.mp = mp;
+	}
 
 	public String getOfferDetails() {
 		return offerDetails;
@@ -48,7 +76,9 @@ public class Offer {
 	@Override
 	public String toString() {
 		return "\r\n  Location: " + address
-		+ " \r\n Description: " + offerDetails + " \r\n";
+		+ " \r\n Description: " + offerDetails + " \r\n"+
+		 " Price: " +String.format("%.2f", price) + " $" + " \r\n"
+		+ " Mp2: " + String.format("%.2f", mp) +"metrii patrati"+ " \r\n";
 		//return "Offer [id=" + id + ", address=" + address + ", offerDetails=" + offerDetails + "]";
 	}
 	

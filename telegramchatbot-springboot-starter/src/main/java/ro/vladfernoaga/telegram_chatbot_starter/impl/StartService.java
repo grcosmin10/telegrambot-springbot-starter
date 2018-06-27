@@ -5,39 +5,54 @@ import org.springframework.stereotype.Service;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
-import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.model.request.ParseMode;
+import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
-
-import ro.vladfernoaga.telegram_chatbot_starter.model.CommonMessage;
-import ro.vladfernoaga.telegram_chatbot_starter.repo.CommonMessagesRepo;
+import ro.vladfernoaga.telegram_chatbot_starter.dao.ICommonMessageDAO;
+import ro.vladfernoaga.telegram_chatbot_starter.dao.PersonDAO;
+import ro.vladfernoaga.telegram_chatbot_starter.model.Person;
+import ro.vladfernoaga.telegram_chatbot_starter.repo.PersonRepo;
+import ro.vladfernoaga.telegram_chatbot_starter.service.IStartService;
 import ro.vladfernoaga.telegram_chatbot_starter.utils.MenuUtils;
 
 @Service
-public class StartService {
+public class StartService implements IStartService{
 	@Autowired
-	CommonMessagesRepo commonMessagesRepo;
-	
+	private ICommonMessageDAO commonMessageDAO;
 	@Autowired
-	MenuUtils menuUtils;
+	PersonDAO personDAO;
+	@Autowired
+	private PersonRepo personRepo;
+	@Autowired
+	private MenuUtils menuUtils;
 	
-	public void execute(TelegramBot bot,Message message)
-	{
+	public void start(TelegramBot bot,Message message)
+	{	SendMessage botResponse;
 		Integer chatId = message.from().id();
-		String messageText = message.text();
 		Integer messageId =message.messageId();
-		
-		
-		CommonMessage commonMessage = commonMessagesRepo.findByCondition("start");
-		String mesaj = commonMessage.getMessage();
-		
-		SendMessage request = new SendMessage(chatId, String.format(mesaj))
+		final Person inputPerson = personRepo.findById(chatId);
+		if (inputPerson != null && inputPerson.getFirstName() != null) {
+			botResponse = new SendMessage(chatId, String.format(commonMessageDAO.getMessage("regUser")))
 				.parseMode(ParseMode.HTML)
 				.disableNotification(false)
 				.replyToMessageId(messageId)
 				.replyMarkup(menuUtils.showMainMenu())
 				;
-		bot.execute(request);
-	}
+		bot.execute(botResponse);}
+		
+		else
+		{
+			
+				personDAO.insertPerson(chatId);
+				
+				ReplyKeyboardMarkup shareKeyboard = menuUtils.shareDetailsMenu(chatId, messageId);
+				
+				botResponse = new SendMessage(chatId, commonMessageDAO.getMessage("newUser")).parseMode(ParseMode.HTML)
+						.disableNotification(false).replyToMessageId(messageId).replyMarkup(shareKeyboard);
+				
+				bot.execute(botResponse);
+			
+		}
+	}  
 
 }

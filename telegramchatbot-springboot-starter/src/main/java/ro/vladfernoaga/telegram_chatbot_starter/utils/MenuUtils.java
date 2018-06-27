@@ -20,10 +20,11 @@ public final class MenuUtils {
 	public final static String START = "/start";	
 	public final static String HELP = "/help";	
 	public final static String LOCATION = "/location";	
-	public final static String OPTION4 = "/option4";	
-	public final static String OPTION5 = "/option5";	
+	public final static String ANOTHER_LOCATION = "alta locatie";	
+	public final static String DENY = "nu";
+	public final static String CHOSEN_LOCATION = "/loc ";
 	
-	public static String[] helpList = {START,HELP,LOCATION,OPTION4,OPTION5};
+ public static String[] helpList = {START,HELP,LOCATION,ANOTHER_LOCATION,DENY};
 	
 	
 
@@ -34,20 +35,35 @@ public final class MenuUtils {
 				properties.getButton1());
 		final KeyboardButton button2 = new KeyboardButton(
 				properties.getButton2());;
-		final KeyboardButton button3 = new KeyboardButton(properties.getButton3());
-		final KeyboardButton button4 = new KeyboardButton(properties.getButton4());
+		
 		
 		button1.requestLocation(true);
 		
-		final KeyboardButton[][] buttonsList = new KeyboardButton[2][2];
+		final KeyboardButton[][] buttonsList = new KeyboardButton[1][2];
 		buttonsList[0][0] = button1;
 		buttonsList[0][1] = button2;
-		buttonsList[1][0] = button3;
-		buttonsList[1][1] = button4;
+		//buttonsList[1][0] = button3;
+		//buttonsList[1][1] = button4;
 		
 		final ReplyKeyboardMarkup menuReplyKeyboard = new ReplyKeyboardMarkup(buttonsList);
 		menuReplyKeyboard.resizeKeyboard(true);
 		menuReplyKeyboard.oneTimeKeyboard(true);
 		return menuReplyKeyboard;
+	}
+	
+	public ReplyKeyboardMarkup shareDetailsMenu(Integer chatId, Integer messageId) {
+		final KeyboardButton button3 = new KeyboardButton(properties.getButton3());
+		final KeyboardButton button4 = new KeyboardButton(properties.getButton4());
+		button3.requestContact(true);
+		
+		final KeyboardButton[][] buttonsList = new KeyboardButton[1][2];
+		buttonsList[0][0] = button3;
+		buttonsList[0][1] = button4;
+		
+		final ReplyKeyboardMarkup contactDetailsKeyboard = new ReplyKeyboardMarkup(buttonsList);
+		contactDetailsKeyboard.resizeKeyboard(true);
+		contactDetailsKeyboard.oneTimeKeyboard(true);
+		
+		return contactDetailsKeyboard;
 	}
 }

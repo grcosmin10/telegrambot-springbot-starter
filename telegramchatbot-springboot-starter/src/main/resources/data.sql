@@ -1,5 +1,10 @@
 INSERT INTO commonmessage(id,language,message,condition)  VALUES('1','RO','Salut eu sunt IMOBbot, expertul tau in impobiliare, cu ce te pot ajuta ?','start') ON CONFLICT DO NOTHING;
-INSERT INTO commonmessage(id,language,message,condition)  VALUES('2','RO','Mesaj Test 2','condition2') ON CONFLICT DO NOTHING;
-INSERT INTO commonmessage(id,language,message,condition)  VALUES('3','RO','Mesaj Test 3','condition3') ON CONFLICT DO NOTHING;
-INSERT INTO commonmessage(id,language,message,condition)  VALUES('4','RO','Mesaj Test 4','condition4') ON CONFLICT DO NOTHING;
-INSERT INTO commonmessage(id,language,message,condition)  VALUES('5','RO','Mesaj Test 5','condition5') ON CONFLICT DO NOTHING;
+INSERT INTO commonmessage(id,language,message,condition)  VALUES('2','RO','Locatia ta este : ','location') ON CONFLICT DO NOTHING;
+INSERT INTO commonmessage(id,language,message,condition)  VALUES('3','RO','Nu recunosc comanda %s','unknown') ON CONFLICT DO NOTHING;
+INSERT INTO commonmessage(id,language,message,condition)  VALUES('4','RO','Am urmatoarele optiuni :','help') ON CONFLICT DO NOTHING;
+INSERT INTO commonmessage(id,language,message,condition)  VALUES('5','RO','Te rog alege un oras resepectand formatul /loc locatia_ta','askLocation') ON CONFLICT DO NOTHING;
+INSERT INTO commonmessage(id,language,message,condition)  VALUES('6','RO','Locatia ta cautata este ','searchedLocation') ON CONFLICT DO NOTHING;
+INSERT INTO commonmessage(id,language,message,condition)  VALUES('7','RO','Salut eu sunt IMOBbot, expertul tau in impobiliare,te rog sa-mi prezinti datele tale..','newUser') ON CONFLICT DO NOTHING;
+INSERT INTO commonmessage(id,language,message,condition)  VALUES('8','RO','Salut din nou, cu ce te pot ajuta? ','regUser') ON CONFLICT DO NOTHING;
+INSERT INTO commonmessage(id,language,message,condition)  VALUES('9','RO','Am salvat datele, acum cu ce te pot ajuta? ','savedContactDetails') ON CONFLICT DO NOTHING;
+INSERT INTO commonmessage(id,language,message,condition)  VALUES('10','RO','Nu am salvat datele, acum cu ce te pot ajuta? ','deny') ON CONFLICT DO NOTHING;

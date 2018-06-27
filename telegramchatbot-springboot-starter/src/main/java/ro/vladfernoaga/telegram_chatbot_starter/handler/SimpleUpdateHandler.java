@@ -17,11 +17,19 @@ import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 
+import ro.vladfernoaga.telegram_chatbot_starter.impl.DenyService;
 import ro.vladfernoaga.telegram_chatbot_starter.impl.HelpService;
 import ro.vladfernoaga.telegram_chatbot_starter.impl.LocationService;
+import ro.vladfernoaga.telegram_chatbot_starter.impl.ShareContactService;
 import ro.vladfernoaga.telegram_chatbot_starter.impl.SimpleService;
 import ro.vladfernoaga.telegram_chatbot_starter.impl.StartService;
 import ro.vladfernoaga.telegram_chatbot_starter.impl.UnknownCommandService;
+import ro.vladfernoaga.telegram_chatbot_starter.service.IAnotherLocationService;
+import ro.vladfernoaga.telegram_chatbot_starter.service.IBasicLocationService;
+import ro.vladfernoaga.telegram_chatbot_starter.service.IHelpService;
+import ro.vladfernoaga.telegram_chatbot_starter.service.ILocationService;
+import ro.vladfernoaga.telegram_chatbot_starter.service.IStartService;
+import ro.vladfernoaga.telegram_chatbot_starter.service.IUnknownCommandService;
 import ro.vladfernoaga.telegram_chatbot_starter.utils.MenuUtils;
 
 @Service
@@ -30,24 +38,32 @@ public class SimpleUpdateHandler implements UpdatesListener {
 	/** The Constant LOGGER. */
 	public static final Logger LOGGER = LogManager.getLogger();
 
-
 	@Autowired
 	private TelegramBot bot;
-	
-	@Autowired
-	private SimpleService simpleService;
 
 	@Autowired
-	private StartService startService;
+	private IStartService startService;
 	
 	@Autowired
-	private UnknownCommandService  unknownCommandService;
+	private IUnknownCommandService  unknownCommandService;
 	
 	@Autowired
-	private HelpService  helpService;
+	private IHelpService  helpService;
 	
 	@Autowired
-	private LocationService  locationService;
+	private ILocationService  locationService;
+	
+	@Autowired
+	private IBasicLocationService basicLocationService;
+	
+	@Autowired
+	private IAnotherLocationService anotherLocationService;
+	
+	@Autowired
+	private ShareContactService shareContactService;
+	
+	@Autowired
+	private DenyService denyService;
 	
 	@Override
 	public int process(List<Update> updates) {
@@ -60,34 +76,50 @@ public class SimpleUpdateHandler implements UpdatesListener {
 	private void process(Update update) {
 		if (update.message() != null && update.message().location() != null) {
 			processUserLocation(update.message());
-			return;
+		} else if (update.message() != null && update.message().contact() != null) {
+			processUserContact(update.message());	
+			
 		} else if (update.message() != null) {
 			processUserMessages(update.message());
-			return;
+		
 		}
 	}
 	
+	private void processUserContact(Message message) {
+		shareContactService.start(bot, message);	
+	}
+
 	private void processUserLocation(Message message) {
-		locationService.execute(bot, message);
+		locationService.start(bot, message);
 		
 	}
 
 	private void processUserMessages(Message message)  {
-		
 		final String messageText = message.text();
+		if(messageText.startsWith(MenuUtils.CHOSEN_LOCATION)) 
+			basicLocationService.start(bot, message);
+		else
 			switch(messageText)
 			{
 				case MenuUtils.START: {
-					startService.execute(bot,message);
+					startService.start(bot,message);
 					break;
 				}
 				case MenuUtils.HELP: {
-					helpService.execute(bot,message);
+					helpService.start(bot,message);
+					break;
+				}
+				case MenuUtils.ANOTHER_LOCATION: {
+					anotherLocationService.start(bot,message);
+					break;
+				}
+				case MenuUtils.DENY :{
+					denyService.start(bot,message);
 					break;
 				}
 				default : 
 				{
-					unknownCommandService.execute(bot, message);
+					unknownCommandService.start(bot, message);
 					break;
 				}
 			}

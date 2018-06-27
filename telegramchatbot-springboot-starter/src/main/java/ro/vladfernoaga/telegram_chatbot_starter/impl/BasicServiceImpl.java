@@ -18,9 +18,9 @@ import ro.vladfernoaga.telegram_chatbot_starter.service.BasicService;
 @Service
 public class BasicServiceImpl implements BasicService {
 
-	 /** The Constant LOGGER. */
-	  private static final Logger LOGGER = LogManager.getLogger();
-	  
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	private BasicRepo basicRepo;
 
 	@Autowired
@@ -33,10 +33,10 @@ public class BasicServiceImpl implements BasicService {
 	public BasicInfoDto addNewOrGetExisting(String name) {
 		Optional<BasicInfo> student = basicRepo.findByName(name);
 		if (student.isPresent()) {
-			LOGGER.info(() -> String.format("The student with name %s is allready present",name));
+			LOGGER.info(() -> String.format("The student with name %s is allready present", name));
 			return toBasicInfoDto(student.get());
 		} else {
-			LOGGER.info(() -> String.format("The student with name %s is not present",name));
+			LOGGER.info(() -> String.format("The student with name %s is not present", name));
 			BasicInfo basicInfo = new BasicInfo();
 			basicInfo.setName(name);
 			try {

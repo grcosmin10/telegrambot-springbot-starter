@@ -26,9 +26,6 @@ public class BeanConfig {
 	@Autowired
 	private SimpleUpdateHandler updateHandler;
 	
-
-	@Autowired
-	private Properties properties;
 	
 	@Bean
 	public CommandLineRunner runTelegramBoot() {

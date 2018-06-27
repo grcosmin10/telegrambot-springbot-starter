@@ -12,7 +12,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 public class SimpleService {
 	
 	
-	public void execute(TelegramBot bot,Message message)
+	public void start(TelegramBot bot,Message message)
 	{
 		Integer chatId = message.from().id();
 		String messageText = message.text();
